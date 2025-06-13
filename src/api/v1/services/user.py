@@ -14,7 +14,16 @@ class UsersService:
             user_id = await self.uow.user.add_one(user_dict)
             return user_id
 
-    async def get_users(self, filter):
+    async def get_users(self):
         async with self.uow:
-            users = await self.uow.user.find_all(filter)
+            users = await self.uow.user.find_all()
             return users
+
+    async def get_by_username(self, username):
+        async with self.uow:
+            try:
+                user = await self.uow.user.get_by_username(username)
+                return user.to_schema()
+            except Exception as e:
+                print(e)
+                return False
